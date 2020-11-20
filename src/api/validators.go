@@ -1,37 +1,36 @@
 package api
 
 import "regexp"
-import "fmt"
+import "errors"
 
 type metric interface {
-	Validate() (string, bool)
+	Validate() error
 }
 
-func Validate(m metric) (string, bool) {
-	message, ok := m.Validate()
-	return message, ok
+func Validate(m metric) error {
+	validateerror := m.Validate()
+	return validateerror
 }
 
-func (m Gauge) Validate() (string, bool) {
+func (m Gauge) Validate() error {
 
 	// Name
 	if len(m.Name) == 0 {
-		return "Empty Name field!", false
+		return errors.New("Empty Name field!")
 	}
 
 	nameRegex := regexp.MustCompile(`^[a-z_][a-z0-9_]*$`)
 	if !(nameRegex.Match([]byte(m.Name))) {
-		return "Incorrect Name field: " + m.Name, false
+		return errors.New("Incorrect Name field: " + m.Name)
 	}
 
 	// Labels
 	for k, v := range m.Labels {
 		if !(nameRegex.Match([]byte(k))) {
-			return "Incorrect field name in labels: " + k, false
+			return errors.New("Incorrect field name in labels: " + k + ":" + v)
 		}
-		fmt.Printf("key[%s] value[%s]\n", k, v)
 	}
 
-	return "Validated!", true
+	return nil
 
 }
