@@ -6,7 +6,6 @@ import (
 	"net/http"
 )
 
-
 func main() {
 	log.Println("Starting app..")
 	http.HandleFunc("/", api.GetStatus)

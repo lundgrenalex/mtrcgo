@@ -1,9 +1,9 @@
 package api
 
 import (
-	"net/http"
 	"encoding/json"
 	"io/ioutil"
+	"net/http"
 )
 
 func StoreGauge(w http.ResponseWriter, r *http.Request) {

@@ -1,6 +1,5 @@
 package storage
 
-
 func update() {
 
 }
