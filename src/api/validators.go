@@ -7,11 +7,6 @@ type metric interface {
 	Validate() error
 }
 
-func Validate(m metric) error {
-	validateerror := m.Validate()
-	return validateerror
-}
-
 func (m Gauge) Validate() error {
 
 	// Name

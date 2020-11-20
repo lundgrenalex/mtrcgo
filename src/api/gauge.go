@@ -29,7 +29,7 @@ func StoreGauge(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Validate
-	validateError := Validate(metric)
+	validateError := metric.Validate()
 	if validateError != nil {
 		SendResponse(HttpResponse{400, validateError.Error()}, w)
 		return
