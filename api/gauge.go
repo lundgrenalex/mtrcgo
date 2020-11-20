@@ -1,20 +1,17 @@
 package api
 
 import (
-	"encoding/json"
+	"github.com/lundgrenalex/mtrcgo/storage"
 	"io/ioutil"
 	"net/http"
 )
 
-func StoreGauge(w http.ResponseWriter, r *http.Request) {
+func StoreGauge(crud storage.CRUDStorage, w http.ResponseWriter, r *http.Request) {
 	// Detect http method
 	if r.Method != http.MethodPost {
 		SendResponse(HttpResponse{405, "Method Not Allowed!"}, w)
 		return
 	}
-
-	// Decode incoming data
-	var metric Gauge
 
 	body, readErr := ioutil.ReadAll(r.Body)
 	if readErr != nil {
@@ -22,9 +19,9 @@ func StoreGauge(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	decodeErr := json.Unmarshal(body, &metric)
-	if decodeErr != nil {
-		SendResponse(HttpResponse{500, decodeErr.Error()}, w)
+	metric, err := storage.NewGaugeMetric(body)
+	if err != nil {
+		SendResponse(HttpResponse{500, err.Error()}, w)
 		return
 	}
 
@@ -36,9 +33,8 @@ func StoreGauge(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Store
-
+	crud.CreateRecord(metric)
 	// Encode
 	SendResponse(metric, w)
 	return
-
 }
