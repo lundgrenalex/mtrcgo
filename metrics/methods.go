@@ -1,15 +1,15 @@
 package metrics
 
 import (
-	"errors"
-	"regexp"
 	"crypto/sha256"
+	"errors"
 	"fmt"
+	"regexp"
 	"sort"
 )
 
 func (m *SimpleMetric) Hash() string {
-	var text string;
+	var text string
 	text += m.Name
 
 	// ASC Sorting json keys
