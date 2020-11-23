@@ -3,15 +3,19 @@ package metrics
 import (
 	"errors"
 	"regexp"
-	"crypto/md5"
+	"crypto/sha256"
+	"fmt"
 )
 
 func (m *SimpleMetric) Hash() string {
 	var text string;
 	text += m.Name
-	byte_text = []byte(text)
-	hash = md5.Sum(data).(string)
-    return hash
+	for k, v := range m.Labels {
+		text += k + v
+	}
+	h := sha256.New()
+	h.Write([]byte(text))
+	return fmt.Sprintf("%x", h.Sum(nil))
 }
 
 func (m *SimpleMetric) Validate() error {
