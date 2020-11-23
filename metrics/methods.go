@@ -5,14 +5,25 @@ import (
 	"regexp"
 	"crypto/sha256"
 	"fmt"
+	"sort"
 )
 
 func (m *SimpleMetric) Hash() string {
 	var text string;
 	text += m.Name
-	for k, v := range m.Labels {
-		text += k + v
+
+	// ASC Sorting json keys
+	keys := make([]string, 0, len(m.Labels))
+	for k := range m.Labels {
+		keys = append(keys, k)
 	}
+	sort.Strings(keys)
+
+	// Making str sum
+	for _, k := range keys {
+		text += k + m.Labels[k]
+	}
+
 	h := sha256.New()
 	h.Write([]byte(text))
 	return fmt.Sprintf("%x", h.Sum(nil))
