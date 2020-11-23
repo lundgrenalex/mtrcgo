@@ -12,14 +12,12 @@ func (m *SimpleMetric) Hash() string {
 	var text string
 	text += m.Name
 
-	// ASC Sorting json keys
 	keys := make([]string, 0, len(m.Labels))
 	for k := range m.Labels {
 		keys = append(keys, k)
 	}
 	sort.Strings(keys)
 
-	// Making str sum
 	for _, k := range keys {
 		text += k + m.Labels[k]
 	}

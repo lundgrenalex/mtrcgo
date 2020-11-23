@@ -8,13 +8,12 @@ import (
 )
 
 func StoreMetric(s metrics.Repository, w http.ResponseWriter, r *http.Request) {
-	// Detect http method
+
 	if r.Method != http.MethodPost {
 		SendResponse(HttpResponse{405, "Method Not Allowed!"}, w)
 		return
 	}
 
-	// Decode incoming metric from JSON format
 	var metric metrics.SimpleMetric
 	body, readErr := ioutil.ReadAll(r.Body)
 	if readErr != nil {
