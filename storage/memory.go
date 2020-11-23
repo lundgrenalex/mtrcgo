@@ -16,7 +16,7 @@ func Init() metrics.Repository {
 	}
 }
 
-func (s *MetricsMemoryStorage) Exists(m metrics.SimpleMetric) bool {
+func (s *MetricsMemoryStorage) exists(m metrics.SimpleMetric) bool {
 	for h, _ := range s.metrics {
 		if h == m.Hash() {
 			return true
@@ -28,7 +28,7 @@ func (s *MetricsMemoryStorage) Exists(m metrics.SimpleMetric) bool {
 func (s *MetricsMemoryStorage) Upsert(m metrics.SimpleMetric) error {
 	s.mx.Lock()
 	defer s.mx.Unlock()
-	if s.Exists(m) {
+	if s.exists(m) {
 		// Must update
 		return nil
 	}

@@ -1,10 +1,11 @@
 package main
 
 import (
-	"github.com/lundgrenalex/mtrcgo/api"
-	"github.com/lundgrenalex/mtrcgo/storage"
 	"log"
 	"net/http"
+
+	"github.com/lundgrenalex/mtrcgo/api"
+	"github.com/lundgrenalex/mtrcgo/storage"
 )
 
 const addr = "127.0.0.1:8080"
