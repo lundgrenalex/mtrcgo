@@ -38,6 +38,10 @@ func (s *MetricsMemoryStorage) Upsert(m metrics.SimpleMetric) error {
 func (s *MetricsMemoryStorage) Remove(m metrics.SimpleMetric) error {
 	s.mx.Lock()
 	defer s.mx.Unlock()
+	if !s.exists(m){
+		return nil
+	}
+	delete(s.metrics, m.Hash())
 	return nil
 }
 
