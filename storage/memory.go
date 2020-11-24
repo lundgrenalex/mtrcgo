@@ -26,12 +26,7 @@ func (s *MetricsMemoryStorage) exists(m metrics.SimpleMetric) bool {
 func (s *MetricsMemoryStorage) Upsert(m metrics.SimpleMetric) error {
 	s.mx.Lock()
 	defer s.mx.Unlock()
-	if s.exists(m) {
-		// Must update
-		return nil
-	}
-	key := m.Hash()
-	s.metrics[key] = m
+	s.metrics[m.Hash()] = m
 	return nil
 }
 
