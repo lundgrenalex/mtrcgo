@@ -8,6 +8,12 @@ import (
 	"sort"
 )
 
+var (
+	// Metric Regexp Validation
+	nameValidation = regexp.MustCompile(`^[a-z_][a-z0-9_]*$`)
+)
+
+
 func (m *SimpleMetric) Hash() string {
 	var text string
 	text += m.Name
@@ -34,14 +40,13 @@ func (m *SimpleMetric) Validate() error {
 		return errors.New("Empty Name field!")
 	}
 
-	nameRegex := regexp.MustCompile(`^[a-z_][a-z0-9_]*$`)
-	if !(nameRegex.Match([]byte(m.Name))) {
+	if !(nameValidation.Match([]byte(m.Name))) {
 		return errors.New("Incorrect Name field: " + m.Name)
 	}
 
 	// Labels
 	for k, v := range m.Labels {
-		if !(nameRegex.Match([]byte(k))) {
+		if !(nameValidation.Match([]byte(k))) {
 			return errors.New("Incorrect field name in labels: " + k + ":" + v)
 		}
 	}

@@ -17,10 +17,8 @@ func Init() metrics.Repository {
 }
 
 func (s *MetricsMemoryStorage) exists(m metrics.SimpleMetric) bool {
-	for h, _ := range s.metrics {
-		if h == m.Hash() {
-			return true
-		}
+	if _, ok := s.metrics[m.Hash()]; ok {
+		return true
 	}
 	return false
 }
