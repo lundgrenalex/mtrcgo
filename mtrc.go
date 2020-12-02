@@ -18,6 +18,10 @@ func main() {
 		api.StoreMetric(s, w, r)
 	})
 
+	http.HandleFunc("/metrics", func(w http.ResponseWriter, r *http.Request) {
+		api.ExposeMetrics(s, w, r)
+	})
+
 	log.Println("Server listening on: " + addr)
 	log.Fatal(http.ListenAndServe(addr, nil))
 

@@ -6,13 +6,13 @@ import (
 	"fmt"
 	"regexp"
 	"sort"
+	"strings"
 )
 
 var (
 	// Metric Regexp Validation
 	nameValidation = regexp.MustCompile(`^[a-z_][a-z0-9_]*$`)
 )
-
 
 func (m *SimpleMetric) Hash() string {
 	var text string
@@ -53,4 +53,26 @@ func (m *SimpleMetric) Validate() error {
 
 	return nil
 
+}
+
+// https://prometheus.io/docs/instrumenting/exposition_formats/
+func Expose(m MetricsSlice) string {
+	getLabels := func (l map[string]string) string {
+		if l == nil {
+			return ""
+		}
+		var labels = make([]string, len(l))
+		i := 0
+		for k, v := range l {
+			labels[i] = fmt.Sprintf("%s=\"%s\"", k, v)
+			i++
+		}
+		return fmt.Sprintf("{%s}", strings.Join(labels, ","))
+	}
+
+	var exposedMetrics string
+	for _, v := range m {
+		exposedMetrics += fmt.Sprintf("%s%s %f\n", v.Name, getLabels(v.Labels), v.Value)
+	}
+	return exposedMetrics
 }
