@@ -41,6 +41,7 @@ func (s *MetricsMemoryStorage) Remove(m metrics.SimpleMetric) error {
 }
 
 func (s *MetricsMemoryStorage) Dump() metrics.MetricsSlice {
+	// НЕ ГАРАНТИРУЕТ порядка в metrics.MetricsSlice
 	s.mx.RLock()
 	defer s.mx.RUnlock()
 	totalMetrics := len(s.metrics)
