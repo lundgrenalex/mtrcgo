@@ -57,30 +57,54 @@ func (m *SimpleMetric) Validate() error {
 
 // https://prometheus.io/docs/instrumenting/exposition_formats/
 func Expose(m MetricsSlice) string {
-
-	var r string
-
 	getLabels := func (l map[string]string) string {
-		var r string
-		r += "{"
+		if l == nil {
+			return ""
+		}
+		var labels = make([]string, len(l))
+		i := 0
 		for k, v := range l {
-			r += k + "=\"" + v + "\","
+			labels[i] = fmt.Sprintf("%s=\"%s\"", k, v)
+			i++
 		}
-		r = strings.TrimRight(r, ",")
-		r += "}"
-		if r == "{}" {
-			r = ""
-		}
-		return r
+		return fmt.Sprintf("{%s}", strings.Join(labels, ","))
 	}
 
+	var exposedMetrics []string
 	for _, v := range m {
-		r += v.Name
-		r += getLabels(v.Labels)
-		r += " " + fmt.Sprintf("%f", v.Value)
-		r += "\n"
+		metric := fmt.Sprintf("%s%s %f\n", v.Name, getLabels(v.Labels), v.Value)
+		exposedMetrics = append(exposedMetrics, metric)
 	}
-
-	return r
-
+	return strings.Join(exposedMetrics, "")
 }
+
+
+//// https://prometheus.io/docs/instrumenting/exposition_formats/
+//func Expose(m MetricsSlice) string {
+//
+//	var r string
+//
+//	getLabels := func (l map[string]string) string {
+//		var r string
+//		r += "{"
+//		for k, v := range l {
+//			r += k + "=\"" + v + "\","
+//		}
+//		r = strings.TrimRight(r, ",")
+//		r += "}"
+//		if r == "{}" {
+//			r = ""
+//		}
+//		return r
+//	}
+//
+//	for _, v := range m {
+//		r += v.Name
+//		r += getLabels(v.Labels)
+//		r += " " + fmt.Sprintf("%f", v.Value)
+//		r += "\n"
+//	}
+//
+//	return r
+//
+//}

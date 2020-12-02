@@ -39,6 +39,27 @@ func TestMetricExposeWithEmptyLabels(t *testing.T) {
 
 }
 
+func TestMetricMultipleLabels(t *testing.T) {
+
+	metric := SimpleMetric{
+		Name:  "test_metric",
+		Value: 45,
+		Date:  1606907901,
+		Labels: map[string]string{
+			"rsc_metric": "3711",
+			"2nd_metric": "42",
+		},
+	}
+
+	want := "test_metric{rsc_metric=\"3711\",2nd_metric=\"42\"} 45.000000\n"
+	res := Expose(MetricsSlice{metric})
+
+	if want != res {
+		t.Errorf("Expose format was incorrect!")
+	}
+
+}
+
 func TestValidate(t *testing.T) {
 
 	// Empty field

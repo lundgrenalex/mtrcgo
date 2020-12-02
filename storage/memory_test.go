@@ -8,7 +8,7 @@ import (
 func TestStorage(t *testing.T) {
 
     s := Init()
-    if (s == nil) {
+    if s == nil {
         t.Errorf("I can't init storage!")
     }
 
@@ -22,29 +22,29 @@ func TestStorage(t *testing.T) {
     }
 
     res := s.Upsert(metric)
-    if (res != nil) {
+    if res != nil {
 		t.Errorf("I can't insert new metric to store!")
 	}
 
     allMetrics := s.Dump()
-    if (allMetrics == nil) {
+    if allMetrics == nil {
 		t.Errorf("I can't dump metric from store!")
 	}
 
     res = s.Remove(metric)
-    if (res != nil) {
+    if res != nil {
 		t.Errorf("I can't remove metric from store!")
 	}
 
     // Try to remove if metric not exists
     res = s.Remove(metric)
-    if (res != nil) {
+    if res != nil {
 		t.Errorf("Got error while we removed metric from store!")
 	}
 
     // Dump empty store
     allMetrics = s.Dump()
-    if (allMetrics == nil) {
+    if allMetrics == nil {
 		t.Errorf("I can't dump metric from store!")
 	}
 
