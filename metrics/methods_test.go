@@ -41,15 +41,58 @@ func TestMetricExposeWithEmptyLabels(t *testing.T) {
 
 func TestValidate(t *testing.T) {
 
-    metric := SimpleMetric{
-		Name:  "test_metric",
+    // Empty field
+    metricWithEmptyName := SimpleMetric{
+		Name:  "",
 		Value: 45,
 		Date:  1606907901,
 	}
 
-    err := metric.Validate()
+    err := metricWithEmptyName.Validate()
+    if (err == nil) {
+        t.Errorf("Bad parser!")
+    }
+
+    // WrongName
+    metricWithWrongName := SimpleMetric{
+		Name:  "bad-metric-name",
+		Value: 45,
+		Date:  1606907901,
+	}
+
+    err = metricWithWrongName.Validate()
+    if (err == nil) {
+        t.Errorf("Bad parser!")
+    }
+
+    // Wrong labels
+    metricWithwrongLabel := SimpleMetric{
+		Name:  "test_metric",
+		Value: 45,
+        Labels: map[string]string{
+            "rsc-metric": "3711",
+        },
+		Date:  1606907901,
+	}
+
+    err = metricWithwrongLabel.Validate()
+    if (err == nil) {
+        t.Errorf("Bad parser!")
+    }
+
+    // All it's ok
+    metric := SimpleMetric{
+		Name:  "test_metric",
+		Value: 45,
+        Labels: map[string]string{
+            "rsc_metric": "3711",
+        },
+		Date:  1606907901,
+	}
+
+    err = metric.Validate()
     if (err != nil) {
-        t.Errorf("Invalid metric!")
+        t.Errorf("Bad parser!")
     }
 
 }
