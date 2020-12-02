@@ -64,7 +64,7 @@ func Expose(m MetricsSlice) string {
 		var r string
 		r += "{"
 		for k, v := range l {
-			r += k + "=" + v + ","
+			r += k + "=\"" + v + "\","
 		}
 		r = strings.TrimRight(r, ",")
 		r += "}"
