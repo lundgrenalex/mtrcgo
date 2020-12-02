@@ -38,3 +38,18 @@ func TestMetricExposeWithEmptyLabels(t *testing.T) {
 	}
 
 }
+
+func TestValidate(t *testing.T) {
+
+    metric := SimpleMetric{
+		Name:  "test_metric",
+		Value: 45,
+		Date:  1606907901,
+	}
+
+    err := metric.Validate()
+    if (err != nil) {
+        t.Errorf("Invalid metric!")
+    }
+
+}
