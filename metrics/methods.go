@@ -70,12 +70,11 @@ func Expose(m MetricsSlice) string {
 		return fmt.Sprintf("{%s}", strings.Join(labels, ","))
 	}
 
-	var exposedMetrics []string
+	var exposedMetrics string
 	for _, v := range m {
-		metric := fmt.Sprintf("%s%s %f\n", v.Name, getLabels(v.Labels), v.Value)
-		exposedMetrics = append(exposedMetrics, metric)
+		exposedMetrics += fmt.Sprintf("%s%s %f\n", v.Name, getLabels(v.Labels), v.Value)
 	}
-	return strings.Join(exposedMetrics, "")
+	return exposedMetrics
 }
 
 
