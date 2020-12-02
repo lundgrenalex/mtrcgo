@@ -68,6 +68,9 @@ func Expose(m MetricsSlice) string {
 		}
 		r = strings.TrimRight(r, ",")
 		r += "}"
+		if r == "{}" {
+			r = ""
+		}
 		return r
 	}
 
