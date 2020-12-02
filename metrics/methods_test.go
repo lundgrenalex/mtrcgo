@@ -60,6 +60,36 @@ func TestMetricMultipleLabels(t *testing.T) {
 
 }
 
+
+func TestMultipleMetrics(t *testing.T) {
+
+	metric1 := SimpleMetric{
+		Name:  "test_metric",
+		Value: 45,
+		Date:  1606907901,
+		Labels: map[string]string{
+			"rsc_metric": "3711",
+		},
+	}
+
+	metric2 := SimpleMetric{
+		Name:  "test_metric2",
+		Value: 45,
+		Date:  1606907901,
+		Labels: map[string]string{
+			"muchWowSuchLabel": "42",
+		},
+	}
+
+	want := "test_metric{rsc_metric=\"3711\"} 45.000000\ntest_metric2{muchWowSuchLabel=\"42\"} 45.000000\n"
+	res := Expose(MetricsSlice{metric1, metric2})
+
+	if want != res {
+		t.Errorf("Expose format was incorrect!")
+	}
+
+}
+
 func TestValidate(t *testing.T) {
 
 	// Empty field
