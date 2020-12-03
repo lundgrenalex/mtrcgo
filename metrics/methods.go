@@ -46,7 +46,7 @@ func (m *SimpleMetric) Validate() error {
 		return errors.New("Incorrect Name field: " + m.Name)
 	}
 
-	// Types: Guage, Counter or Histogram
+	// Types: Gauge, Counter or Histogram
 	checkMetricType := func(t string) bool {
 		switch t {
 		case
@@ -76,7 +76,7 @@ func (m *SimpleMetric) Validate() error {
 
 // Expose func for metrics
 // https://prometheus.io/docs/instrumenting/exposition_formats/
-func Expose(m MetricsSlice) string {
+func (m MetricsSlice) Expose() string {
 	getLabels := func(l map[string]string) string {
 		if l == nil {
 			return ""

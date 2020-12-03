@@ -54,7 +54,7 @@ func ExposeMetrics(s metrics.Repository, w http.ResponseWriter, r *http.Request)
 
 	m := s.Dump()
 	w.WriteHeader(200)
-	w.Write([]byte(metrics.Expose(m)))
+	w.Write([]byte(m.Expose()))
 	return
 
 }

@@ -6,13 +6,13 @@ import (
 	"github.com/lundgrenalex/mtrcgo/metrics"
 )
 
-// MetricsMemoryStorage is shared struct
+// MetricsMemoryStorage is a shared struct
 type MetricsMemoryStorage struct {
 	mx      sync.RWMutex
 	metrics map[string]metrics.SimpleMetric
 }
 
-// Init is a method that provide access to shared store
+// Init is a method that provides access to shared store
 func Init() metrics.Repository {
 	return &MetricsMemoryStorage{
 		metrics: make(map[string]metrics.SimpleMetric, 0),
@@ -20,28 +20,25 @@ func Init() metrics.Repository {
 }
 
 func (s *MetricsMemoryStorage) exists(m metrics.SimpleMetric) bool {
-	if _, ok := s.metrics[m.Hash()]; ok {
-		return true
-	}
-	return false
+	_, ok := s.metrics[m.Hash()]
+	return ok
 }
 
-// Upsert is a method than store metric in wh
+// Upsert metric into storage
 func (s *MetricsMemoryStorage) Upsert(m metrics.SimpleMetric) error {
-
 	s.mx.Lock()
 	defer s.mx.Unlock()
 
 	mh := m.Hash()
-	sm, exists := s.metrics[mh]
 
+	sm, exists := s.metrics[mh]
 	if !exists {
 		s.metrics[mh] = m
 		return nil
 	}
 
 	switch mt := sm.Type; mt {
-	case "guage":
+	case "gauge":
 		sm = m
 	case "counter":
 		m.Value += sm.Value
@@ -52,7 +49,7 @@ func (s *MetricsMemoryStorage) Upsert(m metrics.SimpleMetric) error {
 
 }
 
-// Remove is a method for removing metrics
+// Remove metric from storage
 func (s *MetricsMemoryStorage) Remove(m metrics.SimpleMetric) error {
 	s.mx.Lock()
 	defer s.mx.Unlock()
@@ -63,7 +60,7 @@ func (s *MetricsMemoryStorage) Remove(m metrics.SimpleMetric) error {
 	return nil
 }
 
-// Dump is method for dumping metrics from shared struct
+// Dump metrics from storage
 func (s *MetricsMemoryStorage) Dump() metrics.MetricsSlice {
 	// НЕ ГАРАНТИРУЕТ порядка в metrics.MetricsSlice
 	s.mx.RLock()
