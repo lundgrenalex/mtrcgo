@@ -8,6 +8,7 @@ import (
 	"github.com/lundgrenalex/mtrcgo/metrics"
 )
 
+// StoreMetric i a method for webserver
 func StoreMetric(s metrics.Repository, w http.ResponseWriter, r *http.Request) {
 
 	if r.Method != http.MethodPost {
@@ -23,6 +24,12 @@ func StoreMetric(s metrics.Repository, w http.ResponseWriter, r *http.Request) {
 	}
 
 	err := json.Unmarshal(body, &metric)
+	if err != nil {
+		SendResponse(HttpResponse{500, err.Error()}, w)
+		return
+	}
+
+	err = metric.Validate()
 	if err != nil {
 		SendResponse(HttpResponse{500, err.Error()}, w)
 		return
