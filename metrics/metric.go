@@ -10,7 +10,7 @@ type SimpleMetric struct {
 	Description string            `json:"description,omitempty"`
 }
 
-// MetricsSlice is a slice of Metrics
+// MetricsSlice is a slice of SimpleMetric
 type MetricsSlice []SimpleMetric
 
 // Repository is a repository of methods for storing our metrics
