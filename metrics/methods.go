@@ -14,6 +14,7 @@ var (
 	nameValidation = regexp.MustCompile(`^[a-z_][a-z0-9_]*$`)
 )
 
+// Hash is a hash function for metric
 func (m *SimpleMetric) Hash() string {
 	var text string
 	text += m.Name
@@ -33,11 +34,12 @@ func (m *SimpleMetric) Hash() string {
 	return fmt.Sprintf("%x", h.Sum(nil))
 }
 
+// Validate will check metric
 func (m *SimpleMetric) Validate() error {
 
 	// Name
 	if len(m.Name) == 0 {
-		return errors.New("Empty Name field!")
+		return errors.New("Empty name field")
 	}
 
 	if !(nameValidation.Match([]byte(m.Name))) {
@@ -55,9 +57,10 @@ func (m *SimpleMetric) Validate() error {
 
 }
 
+// Expose func for metrics
 // https://prometheus.io/docs/instrumenting/exposition_formats/
 func Expose(m MetricsSlice) string {
-	getLabels := func (l map[string]string) string {
+	getLabels := func(l map[string]string) string {
 		if l == nil {
 			return ""
 		}
