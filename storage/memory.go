@@ -61,16 +61,16 @@ func (s *MetricsMemoryStorage) Remove(m metrics.SimpleMetric) error {
 }
 
 // Dump metrics from storage
-func (s *MetricsMemoryStorage) Dump() metrics.MetricsSlice {
-	// НЕ ГАРАНТИРУЕТ порядка в metrics.MetricsSlice
+func (s *MetricsMemoryStorage) Dump() metrics.Slice {
+	// НЕ ГАРАНТИРУЕТ порядка в metrics.Slice
 	s.mx.RLock()
 	defer s.mx.RUnlock()
 	totalMetrics := len(s.metrics)
 	if totalMetrics == 0 {
 		// Dummy empty array
-		return make(metrics.MetricsSlice, 0)
+		return make(metrics.Slice, 0)
 	}
-	metricsToReturn := make(metrics.MetricsSlice, totalMetrics)
+	metricsToReturn := make(metrics.Slice, totalMetrics)
 	idx := 0
 	for _, v := range s.metrics {
 		metricsToReturn[idx] = v

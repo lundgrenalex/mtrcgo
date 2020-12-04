@@ -5,20 +5,24 @@ import (
 	"net/http"
 )
 
-type HttpResponse struct {
+// HTTPResponse - template for http response
+type HTTPResponse struct {
 	Status  int    `json:"status"`
 	Message string `json:"message"`
 }
 
-func (e HttpResponse) Response() (int, interface{}) {
+// Response - interface for API error answers
+func (e HTTPResponse) Response() (int, interface{}) {
 	return e.Status, e
 }
 
-type HTTPResponsive interface {
+// Response is a interface for Response
+type Response interface {
 	Response() (int, interface{})
 }
 
-func SendResponse(r HTTPResponsive, w http.ResponseWriter) {
+// SendResponse - output writer for webserver
+func SendResponse(r HTTPResponse, w http.ResponseWriter) {
 	status, response := r.Response()
 	message, _ := json.Marshal(response)
 	w.WriteHeader(status)
