@@ -28,6 +28,4 @@ const (
 	Gauge MetricType = "gauge"
 	// Counter type
 	Counter = "counter"
-	// Histogram type
-	Histogram = "histogram"
 )

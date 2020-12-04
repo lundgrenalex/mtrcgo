@@ -51,8 +51,7 @@ func (m *SimpleMetric) Validate() error {
 		switch t {
 		case
 			"gauge",
-			"counter",
-			"histogram":
+			"counter":
 			return true
 		}
 		return false
