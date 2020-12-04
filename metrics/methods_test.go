@@ -13,8 +13,8 @@ func TestMetricExpose(t *testing.T) {
 		Date: 1606907901,
 	}
 
-	want := "test_metric{rsc_metric=\"3711\"} 45.000000\n"
-	res := Expose(MetricsSlice{metric})
+	want := "# TYPE test_metric \ntest_metric{rsc_metric=\"3711\"} 45.000000\n"
+	res := MetricsSlice{metric}.Expose()
 
 	if want != res {
 		t.Errorf("Expose format was incorrect!")
@@ -25,13 +25,14 @@ func TestMetricExpose(t *testing.T) {
 func TestMetricExposeWithEmptyLabels(t *testing.T) {
 
 	metric := SimpleMetric{
+		Type: "gauge",
 		Name:  "test_metric",
 		Value: 45,
 		Date:  1606907901,
 	}
 
-	want := "test_metric 45.000000\n"
-	res := Expose(MetricsSlice{metric})
+	want := "# TYPE test_metric gauge\ntest_metric 45.000000\n"
+	res := MetricsSlice{metric}.Expose()
 
 	if want != res {
 		t.Errorf("Expose format was incorrect!")
@@ -42,6 +43,7 @@ func TestMetricExposeWithEmptyLabels(t *testing.T) {
 func TestMetricMultipleLabels(t *testing.T) {
 
 	metric := SimpleMetric{
+		Type: "gauge",
 		Name:  "test_metric",
 		Value: 45,
 		Date:  1606907901,
@@ -51,8 +53,8 @@ func TestMetricMultipleLabels(t *testing.T) {
 		},
 	}
 
-	want := "test_metric{rsc_metric=\"3711\",2nd_metric=\"42\"} 45.000000\n"
-	res := Expose(MetricsSlice{metric})
+	want := "# TYPE test_metric gauge\ntest_metric{rsc_metric=\"3711\",2nd_metric=\"42\"} 45.000000\n"
+	res := MetricsSlice{metric}.Expose()
 
 	if want != res {
 		t.Errorf("Expose format was incorrect!")
@@ -64,6 +66,7 @@ func TestMetricMultipleLabels(t *testing.T) {
 func TestMultipleMetrics(t *testing.T) {
 
 	metric1 := SimpleMetric{
+		Type: "gauge",
 		Name:  "test_metric",
 		Value: 45,
 		Date:  1606907901,
@@ -73,6 +76,7 @@ func TestMultipleMetrics(t *testing.T) {
 	}
 
 	metric2 := SimpleMetric{
+		Type: "gauge",
 		Name:  "test_metric2",
 		Value: 45,
 		Date:  1606907901,
@@ -81,8 +85,8 @@ func TestMultipleMetrics(t *testing.T) {
 		},
 	}
 
-	want := "test_metric{rsc_metric=\"3711\"} 45.000000\ntest_metric2{muchWowSuchLabel=\"42\"} 45.000000\n"
-	res := Expose(MetricsSlice{metric1, metric2})
+	want := "# TYPE test_metric gauge\ntest_metric{rsc_metric=\"3711\"} 45.000000\n# TYPE test_metric2 gauge\ntest_metric2{muchWowSuchLabel=\"42\"} 45.000000\n"
+	res := MetricsSlice{metric1, metric2}.Expose()
 
 	if want != res {
 		t.Errorf("Expose format was incorrect!")
@@ -94,6 +98,7 @@ func TestValidate(t *testing.T) {
 
 	// Empty field
 	metricWithEmptyName := SimpleMetric{
+		Type: "gauge",
 		Name:  "",
 		Value: 45,
 		Date:  1606907901,
@@ -106,6 +111,7 @@ func TestValidate(t *testing.T) {
 
 	// WrongName
 	metricWithWrongName := SimpleMetric{
+		Type: "gauge",
 		Name:  "bad-metric-name",
 		Value: 45,
 		Date:  1606907901,
@@ -118,6 +124,7 @@ func TestValidate(t *testing.T) {
 
 	// Wrong labels
 	metricWithwrongLabel := SimpleMetric{
+		Type: "gauge",
 		Name:  "test_metric",
 		Value: 45,
 		Labels: map[string]string{
@@ -133,6 +140,7 @@ func TestValidate(t *testing.T) {
 
 	// All it's ok
 	metric := SimpleMetric{
+		Type: "gauge",
 		Name:  "test_metric",
 		Value: 45,
 		Labels: map[string]string{
