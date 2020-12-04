@@ -76,7 +76,7 @@ func (m *SimpleMetric) Validate() error {
 
 // Expose func for metrics
 // https://prometheus.io/docs/instrumenting/exposition_formats/
-func (m MetricsSlice) Expose() string {
+func (m Slice) Expose() string {
 	getLabels := func(l map[string]string) string {
 		if l == nil {
 			return ""

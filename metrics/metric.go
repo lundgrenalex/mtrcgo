@@ -10,12 +10,24 @@ type SimpleMetric struct {
 	Description string            `json:"description,omitempty"`
 }
 
-// MetricsSlice is a slice of SimpleMetric
-type MetricsSlice []SimpleMetric
+// Slice is a slice of SimpleMetric
+type Slice []SimpleMetric
 
 // Repository is a repository of methods for storing our metrics
 type Repository interface {
 	Upsert(SimpleMetric) error
 	Remove(SimpleMetric) error
-	Dump() MetricsSlice
+	Dump() Slice
 }
+
+// MetricType is specific type for metric
+type MetricType string
+
+const (
+	// Gauge type
+	Gauge MetricType = "gauge"
+	// Counter type
+	Counter = "counter"
+	// Histogram type
+	Histogram = "histogram"
+)
