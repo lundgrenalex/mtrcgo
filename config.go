@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"gopkg.in/yaml.v2"
-	"io/ioutil"
 	"os"
 )
 
@@ -65,26 +64,4 @@ func ParseFlags() (string, error) {
 
 	// Return the configuration path
 	return configPath, nil
-}
-
-func readFile(filePath string) ([]byte, error) {
-	if err := ValidateFilePath(filePath); err != nil {
-		return nil, err
-	}
-	b, err := ioutil.ReadFile(filePath)
-	if err != nil {
-		return nil, err
-	}
-	return b, nil
-}
-
-func writeFile(filePath string, data []byte) error {
-	if err := ValidateFilePath(filePath); err != nil {
-		return err
-	}
-	err := ioutil.WriteFile(filePath, data, 0644)
-	if err != nil {
-		return err
-	}
-	return nil
 }

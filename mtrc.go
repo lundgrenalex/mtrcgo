@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/lundgrenalex/mtrcgo/metrics"
 	"log"
 	"net/http"
 	"time"
@@ -39,15 +38,7 @@ func main() {
 	}
 
 	s := storage.Init()
-	b, err := readFile(config.SnapShot.FilePath)
-	if err == nil{
-		ms, err := metrics.DecodeBinary(b)
-		if err != nil {
-			log.Println(err)
-		}
-		s.LoadSnapShot(*ms)
-	}
-
+	s.LoadSnapShot(config.SnapShot.FilePath)
 	go s.StoreSnapShot(config.SnapShot.Delta, config.SnapShot.FilePath)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {

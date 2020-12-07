@@ -83,14 +83,27 @@ func (s *MetricsMemoryStorage) Dump() metrics.Slice {
 }
 
 // LoadSnapShot metrics
-func (s *MetricsMemoryStorage) LoadSnapShot(ms metrics.Slice) {
+func (s *MetricsMemoryStorage) LoadSnapShot(filePath string) {
+
+	b, err := readFile(filePath)
+
+	if err != nil{
+		log.Println(err)
+		return
+	}
+	ms, err := metrics.DecodeBinary(b)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
 	if ms == nil {
 		return
 	}
 	s.mx.Lock()
 	defer s.mx.Unlock()
-	newMetrics := make(map[string]metrics.SimpleMetric, len(ms))
-	for _, m := range ms {
+	newMetrics := make(map[string]metrics.SimpleMetric, len(*ms))
+	for _, m := range *ms {
 		newMetrics[m.Hash()] = m
 	}
 	s.metrics = newMetrics
@@ -107,10 +120,27 @@ func (s *MetricsMemoryStorage) StoreSnapShot(d time.Duration, filePath string) {
 				// Handle
 				continue
 			}
-			err = ioutil.WriteFile(filePath, b, 0644)
+			err = writeFile(filePath, b)
 			if err != nil {
 				log.Println(err)
 			}
 		}
 	}
+}
+
+
+func readFile(filePath string) ([]byte, error) {
+	b, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func writeFile(filePath string, data []byte) error {
+	err := ioutil.WriteFile(filePath, data, 0644)
+	if err != nil {
+		return err
+	}
+	return nil
 }

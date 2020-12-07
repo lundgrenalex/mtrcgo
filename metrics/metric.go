@@ -20,7 +20,7 @@ type Repository interface {
 	Upsert(SimpleMetric) error
 	Remove(SimpleMetric) error
 	Dump() Slice
-	LoadSnapShot(Slice)
+	LoadSnapShot(filePath string)
 	StoreSnapShot(d time.Duration, filePath string)
 }
 
