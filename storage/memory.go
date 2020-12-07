@@ -82,7 +82,6 @@ func (s *MetricsMemoryStorage) Dump() metrics.Slice {
 	return metricsToReturn
 }
 
-// LoadSnapShot metrics
 func (s *MetricsMemoryStorage) LoadSnapShot(filePath string) {
 
 	b, err := readFile(filePath)
@@ -109,7 +108,7 @@ func (s *MetricsMemoryStorage) LoadSnapShot(filePath string) {
 	s.metrics = newMetrics
 }
 
-func (s *MetricsMemoryStorage) StoreSnapShot(d time.Duration, filePath string) {
+func (s *MetricsMemoryStorage) DumpSnapShot(d time.Duration, filePath string) {
 	ticker := time.NewTicker(time.Second * d)
 	for {
 		select {

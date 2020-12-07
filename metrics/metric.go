@@ -21,7 +21,7 @@ type Repository interface {
 	Remove(SimpleMetric) error
 	Dump() Slice
 	LoadSnapShot(filePath string)
-	StoreSnapShot(d time.Duration, filePath string)
+	DumpSnapShot(d time.Duration, filePath string)
 }
 
 // MetricType is specific type for metric

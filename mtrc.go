@@ -39,7 +39,7 @@ func main() {
 
 	s := storage.Init()
 	s.LoadSnapShot(config.SnapShot.FilePath)
-	go s.StoreSnapShot(config.SnapShot.Delta, config.SnapShot.FilePath)
+	go s.DumpSnapShot(config.SnapShot.Delta, config.SnapShot.FilePath)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		api.StoreMetric(s, w, r)
