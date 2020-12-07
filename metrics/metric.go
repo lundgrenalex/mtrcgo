@@ -1,5 +1,7 @@
 package metrics
 
+import "time"
+
 // SimpleMetric is a basic metric struct
 type SimpleMetric struct {
 	Type        string            `json:"type,omitempty"`
@@ -18,6 +20,8 @@ type Repository interface {
 	Upsert(SimpleMetric) error
 	Remove(SimpleMetric) error
 	Dump() Slice
+	LoadSnapShot(Slice)
+	StoreSnapShot(d time.Duration, filePath string)
 }
 
 // MetricType is specific type for metric
