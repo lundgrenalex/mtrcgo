@@ -83,13 +83,12 @@ func (s *MetricsMemoryStorage) Dump() metrics.Slice {
 }
 
 func (s *MetricsMemoryStorage) LoadSnapShot(filePath string) {
-
-	b, err := readFile(filePath)
-
-	if err != nil{
+	b, err := ioutil.ReadFile(filePath)
+	if err != nil {
 		log.Println(err)
 		return
 	}
+
 	ms, err := metrics.DecodeBinary(b)
 	if err != nil {
 		log.Println(err)
@@ -119,27 +118,11 @@ func (s *MetricsMemoryStorage) DumpSnapShot(d time.Duration, filePath string) {
 				// Handle
 				continue
 			}
-			err = writeFile(filePath, b)
+			err = ioutil.WriteFile(filePath, b, 0644)
 			if err != nil {
-				log.Println(err)
+				// Handle
+				continue
 			}
 		}
 	}
-}
-
-
-func readFile(filePath string) ([]byte, error) {
-	b, err := ioutil.ReadFile(filePath)
-	if err != nil {
-		return nil, err
-	}
-	return b, nil
-}
-
-func writeFile(filePath string, data []byte) error {
-	err := ioutil.WriteFile(filePath, data, 0644)
-	if err != nil {
-		return err
-	}
-	return nil
 }
