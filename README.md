@@ -1,5 +1,10 @@
 # Lightweight Metric Exporter
 
+**Fast, smart, and easy to use metric exporter for your apps.**
+
+Now, this exporter has two metric types: gouge and counter. 
+You can set it in your query at the type field.
+
 ## Storing example
 
 ```bash
