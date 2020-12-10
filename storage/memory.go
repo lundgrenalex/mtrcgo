@@ -1,7 +1,10 @@
 package storage
 
 import (
+	"io/ioutil"
+	"log"
 	"sync"
+	"time"
 
 	"github.com/lundgrenalex/mtrcgo/metrics"
 )
@@ -77,4 +80,49 @@ func (s *MetricsMemoryStorage) Dump() metrics.Slice {
 		idx++
 	}
 	return metricsToReturn
+}
+
+func (s *MetricsMemoryStorage) LoadSnapShot(filePath string) {
+	b, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	ms, err := metrics.DecodeBinary(b)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	if ms == nil {
+		return
+	}
+	s.mx.Lock()
+	defer s.mx.Unlock()
+	newMetrics := make(map[string]metrics.SimpleMetric, len(*ms))
+	for _, m := range *ms {
+		newMetrics[m.Hash()] = m
+	}
+	s.metrics = newMetrics
+}
+
+func (s *MetricsMemoryStorage) DumpSnapShot(d time.Duration, filePath string) {
+	ticker := time.NewTicker(time.Second * d)
+	for {
+		select {
+		case <-ticker.C:
+			ms := s.Dump()
+			b, err := ms.EncodeBinary()
+			if err != nil {
+				// Handle
+				continue
+			}
+			err = ioutil.WriteFile(filePath, b, 0644)
+			if err != nil {
+				// Handle
+				continue
+			}
+		}
+	}
 }

@@ -1,7 +1,9 @@
 package metrics
 
 import (
+	"bytes"
 	"crypto/sha256"
+	"encoding/gob"
 	"errors"
 	"fmt"
 	"regexp"
@@ -75,7 +77,7 @@ func (m *SimpleMetric) Validate() error {
 
 // Expose func for metrics
 // https://prometheus.io/docs/instrumenting/exposition_formats/
-func (m Slice) Expose() string {
+func (s Slice) Expose() string {
 	getLabels := func(l map[string]string) string {
 		if l == nil {
 			return ""
@@ -90,7 +92,7 @@ func (m Slice) Expose() string {
 	}
 
 	var exposedMetrics string
-	for _, v := range m {
+	for _, v := range s {
 		if v.Type == "counter" {
 			v.Name += "_total"
 		}
@@ -101,4 +103,25 @@ func (m Slice) Expose() string {
 		exposedMetrics += fmt.Sprintf("%s%s %f\n", v.Name, getLabels(v.Labels), v.Value)
 	}
 	return exposedMetrics
+}
+
+func (s Slice) EncodeBinary() ([]byte, error){
+	buffer := new(bytes.Buffer)
+	enc := gob.NewEncoder(buffer)
+	err := enc.Encode(s)
+	if err != nil {
+		return nil, err
+	}
+	return buffer.Bytes(), nil
+}
+
+func DecodeBinary(b []byte) (*Slice, error){
+	buffer := bytes.NewBuffer(b)
+	e := new(Slice)
+	dec := gob.NewDecoder(buffer)
+	err := dec.Decode(e)
+	if err != nil {
+		return nil, err
+	}
+	return e, nil
 }
